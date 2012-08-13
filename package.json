@@ -1,0 +1,22 @@
+{
+    "name": "http-bot"
+  , "version": "0.0.1"
+  , "description": "http bot based on user action"
+  , "keywords": ["http", "request", "bot"]
+  , "author": "puraumu"
+  , "dependencies": {
+      "jsdom": "0.2.x"
+    , "request": "2.x.x"
+    , "mkdirp": "0.3.x"
+    , "page-history": "0.0.1"
+  }
+  , "devDependencies": {
+      "express": "3.0.0beta4"
+    , "should": "*"
+    , "mocha": "*"
+    , "page-history": "0.0.1"
+  }
+  , "main": "./index"
+  , "engines": { "node": "*" }
+}
+
