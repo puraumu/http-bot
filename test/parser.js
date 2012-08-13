@@ -94,58 +94,51 @@ describe('Parser', function() {
   })
 
   describe('.evalProxy()', function() {
-    it('should', function() {
+    it('should return true, because 1st request was 200', function() {
+      parser.evalProxy(0).should.be.true
+    })
+    it('should return true, because 2nd request was 200', function() {
+      parser.evalProxy(1).should.be.true
     })
   })
 
-  // describe('`error`', function(){
-    // it('should get 404 and details', function(done){
-      // parser.once('error', function(){
-        // parser.errors.should.have.length(1)
+  describe('`error`', function(){
+    it('should get 404 but no warnings', function(done){
+      parser.once('notfound', function() {
+        throw 'should not be invoked'
+      })
+      act.url = host + '/hogehoge'
+      act.mode = 'get'
+      act.fn = function(body, url, cwp) {
+        parser.resHeaders[cwp].statusCode.should.eql(404)
+        parser.removeAllListeners('notfound')
+        done()
+      }
+      parser.request(act, 2)
+    })
+    // it('should get `notfound` event because act.url is invalid.', function(done){
+      // parser.once('notfound', function(redirects, cwp) {
+        // parser.reqHeaders[cwp].exist.should.be.false
         // done()
       // })
-      // var d = {
-        // cookie: '',
-        // url: host + '/hogehoge',
-        // withproxy: false,
-        // mode: 'get',
-        // fn: function(body, url){ parser.emit('error') } }
-      // parser.request(d)
-    // })
-    // it('should invoke function with argument null', function(done){
-      // var d = {
-        // cookie: '',
-        // url: 'hogehoge',
-        // withproxy: false,
-        // mode: 'get',
-        // fn: function(body, url, n){ should.strictEqual(body, null);done() } }
-      // parser.request(d)
+      // act.url = 'http://hogehoge.local'
+      // act.fn = function(body, url, cwp) {
+        // should.strictEqual(body, null)
+      // }
+      // parser.request(act, 3)
     // })
     // it('should not write response when not found', function(done){
       // parser.once('notfound', function(){
         // parser.errors.should.have.length(3)
         // done()
       // })
-      // var d = {
-        // cookie: '',
-        // url: 'boboobobd',
-        // withproxy: false,
-        // mode: 'write',
-        // fn: function(){ throw 'boooom!!' } }
-      // parser.request(d)
+      // act.url
+      // act.mode = 'write'
+      // act.fn = function() { throw 'boooom!' }
+      // parser.request(act)
     // })
-  // })
 
-  // describe('`end`', function(){
-    // it('should write errors as json', function(done){
-      // parser.once('end', function(){ done(); })
-      // parser.emit('end', 'file')
-    // })
-    // it('should put errors to stdout', function(done){
-      // parser.once('end', function(){ done(); })
-      // parser.emit('end', 'log')
-    // })
-  // })
+  })
 
 })
 
