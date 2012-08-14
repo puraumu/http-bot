@@ -11,6 +11,10 @@ app.get('/', function(req, res){
   res.send('foobar');
 });
 
+app.get('/title', function(req, res){
+  res.send('<title>here is title</title>');
+});
+
 app.listen(3002);
 
 var info
@@ -86,11 +90,25 @@ describe('Info', function(){
         done()
       }, 10)
     })
+    it('should get title from res.body', function(done){
+      var target = host + '/title'
+      info.urls.push({data: target, valid: false})
+      info.tryRequest()
+      setTimeout(function() {
+        info.urls[3].title.should.eql('here is title')
+        done()
+      }, 10)
+    })
   })
 
   // info, proxy, retry => parser
   describe('.environment()', function() {
     it('should', function() {
+      var urls = [], len = 3
+      for (var i = 0; i < len; i++) {
+        urls.push({data: host + '/' + String(i), title: 'env-' + String(i)})
+      };
+      info.environment(urls)
     })
   })
 
