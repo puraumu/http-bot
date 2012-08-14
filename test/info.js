@@ -1,5 +1,4 @@
-var Getter = require('../')
-  , Info = Getter.Info
+var getter = require('../')
   , join = require('path').join
   , fs = require('fs')
   , should = require('should')
@@ -29,7 +28,7 @@ describe('Info', function(){
 
   describe('new', function(){
     it('should be initialized with argument', function(){
-      info = Info(set)
+      info = getter.info(set)
     })
     it('should be jqueryPath', function(){
       info.jqueryPath.should.eql(jqueryPath)
@@ -101,7 +100,7 @@ describe('Info', function(){
     })
   })
 
-  // info, proxy, retry => parser
+  // info, proxy, retry => bot
   describe('.environment()', function() {
     it('should', function() {
       var urls = [], len = 3
@@ -112,37 +111,37 @@ describe('Info', function(){
     })
   })
 
-  // parser, cwp, reqhead, reshead => header errors
+  // bot, cwp, reqhead, reshead => header errors
   describe('.failed()', function() {
     it('should', function() {
     })
   })
 
-  // info, wait?, (stack?) => parser
+  // info, wait?, (stack?) => bot
   describe('.pushAct()', function() {
     it('should', function() {
     })
   })
 
-  // info, title, => parser, dir
+  // info, title, => bot, dir
   describe('.dldir()', function() {
     it('should', function() {
     })
   })
 
-  // parser, cwp, type, reshead, reqhead => stdout
+  // bot, cwp, type, reshead, reqhead => stdout
   describe('.logger()', function() {
     it('should', function() {
     })
   })
 
-  // parser, errors => {file}
+  // bot, errors => {file}
   describe('.writeErrors()', function() {
     it('should', function() {
     })
   })
 
-  // parser, proxy => {file}
+  // bot, proxy => {file}
   describe('.writeProxy()', function() {
     it('should', function() {
     })
