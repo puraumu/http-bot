@@ -70,46 +70,46 @@ describe('`file`', function() {
 })
 
 describe('`info`', function() {
-})
-describe('`action`', function() {
-})
-
-  /**
-   * comment
   describe('.checkUrl() and .tryRequest()', function(){
-    it('should prepare', function() {
+    it('prepare', function() {
       info.tryRequest()
-      // setTimeout(function() { console.log(info.urls);done() }, 20)
     })
     it('should get 2xx as valid', function(done){
       var target = host + '/'
-      info.urls.push({data: target, valid: false})
+      file.urls.push({data: target, valid: false})
       info.tryRequest()
       setTimeout(function() {
-        info.urls[1].valid.should.be.true
+        file.urls[1].valid.should.be.true
         done()
       }, 10)
     })
     it('should get 4xx as invalid', function(done){
       var target = host + '/hoho'
-      info.urls.push({data: target, valid: true})
+      file.urls.push({data: target, valid: true})
       info.tryRequest()
       setTimeout(function() {
-        info.urls[2].valid.should.be.false
+        file.urls[2].valid.should.be.false
         done()
       }, 10)
     })
     it('should get title from res.body', function(done){
       var target = host + '/title'
-      info.urls.push({data: target, valid: false})
+      file.urls.push({data: target, valid: false})
       info.tryRequest()
       setTimeout(function() {
-        info.urls[3].title.should.eql('here is title')
+        file.urls[3].title.should.eql('here is title')
         done()
       }, 10)
     })
   })
+})
 
+describe('`action`', function() {
+})
+
+
+  /**
+   * comment
   // info, proxy, retry => bot
   describe('.environment()', function() {
     it('should', function() {
