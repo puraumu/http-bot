@@ -18,14 +18,20 @@ app.listen(3002);
 
 var file = getter.file
   , settings = getter.settings
-  , info = getter.info
   , action = getter.action
+  , act = {
+    fn: function() {},
+    url: host + '/',
+    cookie: {},
+    withproxy: false,
+    mode: 'get' }
   , set = {
       jqueryPath: join(__dirname, './files/jquery.min.js'),
       proxyPath: join(__dirname,'./files/proxy.json'),
       queuePath: join(__dirname,'./files/queue.json'),
       siteName: 'test',
-      mode: 'test'}
+      mode: 'test',
+      act: act }
 
 describe('init()', function() {
   it('should initialize Objects', function() {
@@ -67,17 +73,14 @@ describe('`file`', function() {
   it('should read the first url', function(){
     file.urls[0].data.should.eql('http://localhost:3232/foo/bar/hoge')
   })
-})
-
-describe('`info`', function() {
   describe('.checkUrl() and .tryRequest()', function(){
     it('prepare', function() {
-      info.tryRequest()
+      file.tryRequest()
     })
     it('should get 2xx as valid', function(done){
       var target = host + '/'
       file.urls.push({data: target, valid: false})
-      info.tryRequest()
+      file.tryRequest()
       setTimeout(function() {
         file.urls[1].valid.should.be.true
         done()
@@ -86,7 +89,7 @@ describe('`info`', function() {
     it('should get 4xx as invalid', function(done){
       var target = host + '/hoho'
       file.urls.push({data: target, valid: true})
-      info.tryRequest()
+      file.tryRequest()
       setTimeout(function() {
         file.urls[2].valid.should.be.false
         done()
@@ -95,16 +98,22 @@ describe('`info`', function() {
     it('should get title from res.body', function(done){
       var target = host + '/title'
       file.urls.push({data: target, valid: false})
-      info.tryRequest()
+      file.tryRequest()
       setTimeout(function() {
         file.urls[3].title.should.eql('here is title')
         done()
-      }, 10)
+      }, 12)
     })
   })
 })
 
 describe('`action`', function() {
+  describe('initialized', function() {
+    it('should have protoact', function() {
+      action.protoact.should.eql(act)
+
+    })
+  })
 })
 
 
