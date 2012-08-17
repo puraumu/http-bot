@@ -1,4 +1,4 @@
-var getter = require('../')
+var getter = require('../lib/info')
   , join = require('path').join
   , fs = require('fs')
   , should = require('should')
@@ -16,56 +16,66 @@ app.get('/title', function(req, res){
 
 app.listen(3002);
 
-var info
+var file = getter.file
+  , settings = getter.settings
+  , info = getter.info
+  , action = getter.action
   , set = {
-      jquery: jqueryPath = join(__dirname, './files/jquery.min.js'),
-      proxy: proxyPath = join(__dirname,'./files/proxy.json'),
-      queue: queuePath = join(__dirname,'./files/queue.json'),
-      name: 'test',
+      jqueryPath: join(__dirname, './files/jquery.min.js'),
+      proxyPath: join(__dirname,'./files/proxy.json'),
+      queuePath: join(__dirname,'./files/queue.json'),
+      siteName: 'test',
       mode: 'test'}
 
-describe('Info', function(){
+describe('init()', function() {
+  it('should initialize Objects', function() {
+    getter.init(set)
+  })
+})
 
-  describe('new', function(){
-    it('should be initialized with argument', function(){
-      info = getter.info(set)
+describe('`settings`', function() {
+  describe('initialized', function() {
+    it('should have jqueryPath', function() {
+      settings.jqueryPath.should.eql(set.jqueryPath)
     })
-    it('should be jqueryPath', function(){
-      info.jqueryPath.should.eql(jqueryPath)
+    it('should have proxyPath', function() {
+      settings.proxyPath.should.eql(set.proxyPath)
     })
-    it('should be proxyPath', function(){
-      info.proxyPath.should.eql(proxyPath)
-    })
-    it('should be queuePath', function(){
-      info.queuePath.should.eql(queuePath)
-    })
-    it('should loadFiles', function(){
-      info.jquery.should.not.be.empty;
-    })
-    it('should read proxy list', function(){
-      // info.proxy.should.be.empty;
-    })
-    it('should set urls', function(){
-      info.urls.should.not.be.empty;
-    })
-    it('should read the first url', function(){
-      info.urls[0].data.should.eql('http://localhost:3232/foo/bar/hoge');
+    it('should have queuePath', function() {
+      settings.queuePath.should.eql(set.queuePath)
     })
   })
-
-  describe('.createDir()', function() {
-    it('should', function() {
-      fs.exists(join(info._sites, info.siteName, 'dl'), function(exists) {
+  describe('createDir()', function() {
+    it('should create dir based on this', function() {
+      fs.exists(join(settings._sites, settings.siteName, 'dl'), function(exists) {
         exists.should.be.true
       })
     })
   })
+})
 
-  describe('.loadFiles()', function() {
-    it('should', function() {
-    })
+describe('`file`', function() {
+  it('should have jquery', function(){
+    file.jquery.should.not.be.empty
   })
+  it('should have proxy list', function(){
+    file.proxyList.should.be.empty
+  })
+  it('should set urls', function(){
+    file.urls.should.not.be.empty
+  })
+  it('should read the first url', function(){
+    file.urls[0].data.should.eql('http://localhost:3232/foo/bar/hoge')
+  })
+})
 
+describe('`info`', function() {
+})
+describe('`action`', function() {
+})
+
+  /**
+   * comment
   describe('.checkUrl() and .tryRequest()', function(){
     it('should prepare', function() {
       info.tryRequest()
@@ -152,6 +162,5 @@ describe('Info', function(){
     it('should', function() {
     })
   })
-
-})
+   */
 
