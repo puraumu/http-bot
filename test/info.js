@@ -20,21 +20,21 @@ var file = getter.file
   , settings = getter.settings
   , action = getter.action
   , act = {
-    fn: function() {},
-    url: host + '/',
     cookie: {},
+    url: host + '/',
     withproxy: false,
-    mode: 'get' }
+    write: false,
+    fn: function() {} }
   , set = {
       jqueryPath: join(__dirname, './files/jquery.min.js'),
       proxyPath: join(__dirname,'./files/proxy.json'),
       queuePath: join(__dirname,'./files/queue.json'),
       siteName: 'test',
-      mode: 'test',
-      act: act }
+      protoact: act }
 
 describe('init()', function() {
   it('should initialize Objects', function() {
+    file._silent = true
     getter.init(set)
   })
 })
@@ -71,49 +71,90 @@ describe('`file`', function() {
     file.urls.should.not.be.empty
   })
   it('should read the first url', function(){
-    file.urls[0].data.should.eql('http://localhost:3232/foo/bar/hoge')
+    file.urls[0].should.eql('http://localhost:3232/foo/bar/hoge')
   })
-  describe('.checkUrl() and .tryRequest()', function(){
-    it('prepare', function() {
-      file.tryRequest()
-    })
-    it('should get 2xx as valid', function(done){
-      var target = host + '/'
-      file.urls.push({data: target, valid: false})
-      file.tryRequest()
-      setTimeout(function() {
-        file.urls[1].valid.should.be.true
-        done()
-      }, 10)
-    })
-    it('should get 4xx as invalid', function(done){
-      var target = host + '/hoho'
-      file.urls.push({data: target, valid: true})
-      file.tryRequest()
-      setTimeout(function() {
-        file.urls[2].valid.should.be.false
-        done()
-      }, 10)
-    })
-    it('should get title from res.body', function(done){
-      var target = host + '/title'
-      file.urls.push({data: target, valid: false})
-      file.tryRequest()
-      setTimeout(function() {
-        file.urls[3].title.should.eql('here is title')
-        done()
-      }, 12)
-    })
-  })
+
+  // describe('.checkUrl() and .tryRequest()', function(){
+    // it('prepare', function() {
+      // file.tryRequest()
+    // })
+    // it('should get 2xx as valid', function(done){
+      // var target = host + '/'
+      // file.urls.push({data: target, valid: false})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[1].valid.should.be.true
+        // done()
+      // }, 10)
+    // })
+    // it('should get 4xx as invalid', function(done){
+      // var target = host + '/hoho'
+      // file.urls.push({data: target, valid: true})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[2].valid.should.be.false
+        // done()
+      // }, 10)
+    // })
+    // it('should get title from res.body', function(done){
+      // var target = host + '/title'
+      // file.urls.push({data: target, valid: false})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[3].title.should.eql('here is title')
+        // done()
+      // }, 12)
+    // })
+  // })
+
 })
 
 describe('`action`', function() {
+  it('prepare', function() {
+    settings.proxyPath = ''
+    settings.queuePath = ''
+    act.fn = function() {}
+    act.write = false
+    getter.start(settings)
+    file.urls = []
+    action.index = 0
+    file.urls.push(host + '/')
+    file.urls.push(host + '/title')
+  })
+
   describe('initialized', function() {
     it('should have protoact', function() {
       action.protoact.should.eql(act)
-
     })
   })
+
+  describe('.next()', function() {
+    it('should loop valid urls', function() {
+      action.next()
+      settings.dldir.should.not.be.empty
+    })
+    it('should increase counter', function() {
+      action.index.should.eql(1)
+    })
+  })
+
+  describe('.createBot()', function() {
+    it('should create `Bot`', function() {
+      // console.log(action.client);
+      // console.log(action.log);
+    })
+  })
+
+  describe('.add()', function() {
+    it('should have protoact', function() {
+    })
+  })
+
+  describe('.failed()', function() {
+    it('should have protoact', function() {
+    })
+  })
+
 })
 
 
