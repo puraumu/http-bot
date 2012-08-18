@@ -5,6 +5,7 @@ var bot = require('../lib/bot')
   , fs = require('fs')
   , join = require('path').join
   , host = 'http://localhost:3003'
+  , binary = 'http://localhost/~puraumu/src/CSS-frameworks.pdf'
 
 app.get('/', function(req, res){
   res.send('foobar');
@@ -46,18 +47,31 @@ describe('Bot', function() {
     })
   })
 
+  describe('.setHeaders()', function() {
+    it('should', function() {
+      var o = client.setHeaders(act)
+
+      o.url.should.eql(act.url)
+    })
+  })
+
   describe('request()', function(){
     it('should get 200', function(done){
+      var o = client.setHeaders(act)
       act.fn = function(body, url, cwp) {
           body.should.eql('foobar');
           done() }
-      client.request(act)
+      client.request(o, false, act.fn)
     })
     it('should get body and write it', function(done){
-      act.mode = 'write'
       act.fn = function() {}
       act.url = host + '/hoge'
-      client.request(act)
+      client.request(act, true, act.fn)
+      done()
+    })
+    it('should write binary file', function(done){
+      act.url = binary
+      client.request(act, true, act.fn)
       done()
     })
   })
