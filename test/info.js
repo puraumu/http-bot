@@ -140,6 +140,7 @@ describe('`action`', function() {
 
   describe('.createBot()', function() {
     it('should create `Bot`', function() {
+      action.next()
       // console.log(action.client);
       // console.log(action.log);
     })
@@ -156,7 +157,6 @@ describe('`action`', function() {
   })
 
 })
-
 
   /**
    * comment
