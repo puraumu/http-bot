@@ -1,4 +1,5 @@
-var bot = require('../lib/bot')
+var root = require('../lib')
+  , bot = root.bot
   , should = require('should')
   , express = require('express')
   , app = express()
@@ -11,71 +12,63 @@ app.get('/', function(req, res){
   res.send('foobar');
 });
 
-app.get('/foo', function(req, res){
-  res.send('foo, bar');
-});
-
-app.get('/hoge', function(req, res){
-  res.send("here is content\n");
-});
-
 app.listen(3003);
 
-var act = {}, set = {}, client, log = bot.log, out = join(__dirname, '../sd')
-act.fn = function() {  }
-act.cookie = []
-act.url = host + '/'
-act.withproxy = false
-act.mode = 'get'
-
-set.proxy = [{data:'foo'}, {data:'bar'}, {data:'hoge'}]
-set.dldir = out
-set.retry = false
+var act = {}
+  , out = join(__dirname, '../sd')
+  , set = {dldir: out}
+  , client
+  , log = bot.log
 
 describe('Bot', function() {
 
   describe('new', function() {
-    it('should be initialized', function() {
-      client = bot(set)
-      client.proxyList.should.have.length(3)
-    })
     it('should read dldir', function() {
+      client = bot(set)
       client.dldir.should.eql(out)
-    })
-    it('should read retry', function() {
-      client.retry.should.eql(false)
     })
   })
 
-  describe('.setHeaders()', function() {
-    it('should', function() {
-      var o = client.setHeaders(act)
-
-      o.url.should.eql(act.url)
+  describe('set()', function() {
+    it('should assign arguments', function() {
+      client.set('foo', 'bar')
+      client.options['foo'].should.eql('bar')
     })
   })
 
   describe('request()', function(){
-    it('should get 200', function(done){
-      var o = client.setHeaders(act)
+    it('should get res.body', function(done){
+      client.set('url', host + '/')
+      act.write = false
       act.fn = function(body, url, cwp) {
           body.should.eql('foobar');
           done() }
-      client.request(o, false, act.fn)
+      client.request(act.write, act.fn)
+    })
+    it('should invoke request', function(done){
+      client.set('url', host + '/')
+      act.write = false
+      act.fn = function(body, url, cwp) {
+          body.should.eql('foobar');
+          done() }
+      client.trigger(act)
     })
     it('should get body and write it', function(done){
       act.fn = function() {}
-      act.url = host + '/hoge'
-      client.request(act, true, act.fn)
-      done()
+      act.write = true
+      client.trigger(act)
+      setTimeout(function() {done()}, 10);
+      // done()
     })
     it('should write binary file', function(done){
-      act.url = binary
-      client.request(act, true, act.fn)
+      client.set('url', binary)
+      client.request(act)
       done()
     })
   })
 
+  /**
+   * comment
   describe('readProxy()', function(){
     it('should read first item', function(){
       client._proxy = -1;
@@ -100,6 +93,7 @@ describe('Bot', function() {
       client.evalProxy(1).should.be.true
     })
   })
+   */
 
 })
 
