@@ -1,4 +1,4 @@
-var getter = require('../')
+var getter = require('../lib/info')
   , join = require('path').join
   , fs = require('fs')
   , should = require('should')
@@ -16,90 +16,150 @@ app.get('/title', function(req, res){
 
 app.listen(3002);
 
-var info
+var file = getter.file
+  , settings = getter.settings
+  , action = getter.action
+  , act = {
+    cookie: {},
+    url: host + '/',
+    withproxy: false,
+    write: false,
+    fn: function() {} }
   , set = {
-      jquery: jqueryPath = join(__dirname, './files/jquery.min.js'),
-      proxy: proxyPath = join(__dirname,'./files/proxy.json'),
-      queue: queuePath = join(__dirname,'./files/queue.json'),
-      name: 'test',
-      mode: 'test'}
+      jqueryPath: join(__dirname, './files/jquery.min.js'),
+      proxyPath: join(__dirname,'./files/proxy.json'),
+      queuePath: join(__dirname,'./files/queue.json'),
+      siteName: 'test',
+      protoact: act }
 
-describe('Info', function(){
+describe('init()', function() {
+  it('should initialize Objects', function() {
+    file._silent = true
+    getter.init(set)
+  })
+})
 
-  describe('new', function(){
-    it('should be initialized with argument', function(){
-      info = getter.info(set)
+describe('`settings`', function() {
+  describe('initialized', function() {
+    it('should have jqueryPath', function() {
+      settings.jqueryPath.should.eql(set.jqueryPath)
     })
-    it('should be jqueryPath', function(){
-      info.jqueryPath.should.eql(jqueryPath)
+    it('should have proxyPath', function() {
+      settings.proxyPath.should.eql(set.proxyPath)
     })
-    it('should be proxyPath', function(){
-      info.proxyPath.should.eql(proxyPath)
-    })
-    it('should be queuePath', function(){
-      info.queuePath.should.eql(queuePath)
-    })
-    it('should loadFiles', function(){
-      info.jquery.should.not.be.empty;
-    })
-    it('should read proxy list', function(){
-      // info.proxy.should.be.empty;
-    })
-    it('should set urls', function(){
-      info.urls.should.not.be.empty;
-    })
-    it('should read the first url', function(){
-      info.urls[0].data.should.eql('http://localhost:3232/foo/bar/hoge');
+    it('should have queuePath', function() {
+      settings.queuePath.should.eql(set.queuePath)
     })
   })
-
-  describe('.createDir()', function() {
-    it('should', function() {
-      fs.exists(join(info._sites, info.siteName, 'dl'), function(exists) {
+  describe('createDir()', function() {
+    it('should create dir based on this', function() {
+      fs.exists(join(settings._sites, settings.siteName, 'dl'), function(exists) {
         exists.should.be.true
       })
     })
   })
+})
 
-  describe('.loadFiles()', function() {
-    it('should', function() {
+describe('`file`', function() {
+  it('should have jquery', function(){
+    file.jquery.should.not.be.empty
+  })
+  it('should have proxy list', function(){
+    file.proxyList.should.be.empty
+  })
+  it('should set urls', function(){
+    file.urls.should.not.be.empty
+  })
+  it('should read the first url', function(){
+    file.urls[0].should.eql('http://localhost:3232/foo/bar/hoge')
+  })
+
+  // describe('.checkUrl() and .tryRequest()', function(){
+    // it('prepare', function() {
+      // file.tryRequest()
+    // })
+    // it('should get 2xx as valid', function(done){
+      // var target = host + '/'
+      // file.urls.push({data: target, valid: false})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[1].valid.should.be.true
+        // done()
+      // }, 10)
+    // })
+    // it('should get 4xx as invalid', function(done){
+      // var target = host + '/hoho'
+      // file.urls.push({data: target, valid: true})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[2].valid.should.be.false
+        // done()
+      // }, 10)
+    // })
+    // it('should get title from res.body', function(done){
+      // var target = host + '/title'
+      // file.urls.push({data: target, valid: false})
+      // file.tryRequest()
+      // setTimeout(function() {
+        // file.urls[3].title.should.eql('here is title')
+        // done()
+      // }, 12)
+    // })
+  // })
+
+})
+
+describe('`action`', function() {
+  it('prepare', function() {
+    settings.proxyPath = ''
+    settings.queuePath = ''
+    act.fn = function() {}
+    act.write = false
+    getter.start(settings)
+    file.urls = []
+    action.index = 0
+    file.urls.push(host + '/')
+    file.urls.push(host + '/title')
+  })
+
+  describe('initialized', function() {
+    it('should have protoact', function() {
+      action.protoact.should.eql(act)
     })
   })
 
-  describe('.checkUrl() and .tryRequest()', function(){
-    it('should prepare', function() {
-      info.tryRequest()
-      // setTimeout(function() { console.log(info.urls);done() }, 20)
+  describe('.next()', function() {
+    it('should loop valid urls', function() {
+      action.next()
+      settings.dldir.should.not.be.empty
     })
-    it('should get 2xx as valid', function(done){
-      var target = host + '/'
-      info.urls.push({data: target, valid: false})
-      info.tryRequest()
-      setTimeout(function() {
-        info.urls[1].valid.should.be.true
-        done()
-      }, 10)
-    })
-    it('should get 4xx as invalid', function(done){
-      var target = host + '/hoho'
-      info.urls.push({data: target, valid: true})
-      info.tryRequest()
-      setTimeout(function() {
-        info.urls[2].valid.should.be.false
-        done()
-      }, 10)
-    })
-    it('should get title from res.body', function(done){
-      var target = host + '/title'
-      info.urls.push({data: target, valid: false})
-      info.tryRequest()
-      setTimeout(function() {
-        info.urls[3].title.should.eql('here is title')
-        done()
-      }, 10)
+    it('should increase counter', function() {
+      action.index.should.eql(1)
     })
   })
 
+  describe('.createBot()', function() {
+    it('should create `Bot`', function() {
+      action.next()
+      // console.log(action.client);
+      // console.log(action.log);
+    })
+  })
+
+  describe('.add()', function() {
+    it('should have protoact', function() {
+    })
+  })
+
+  describe('.failed()', function() {
+    it('should have protoact', function() {
+    })
+  })
+
+})
+
+  /**
+   * comment
   // info, proxy, retry => bot
   describe('.environment()', function() {
     it('should', function() {
@@ -152,6 +212,5 @@ describe('Info', function(){
     it('should', function() {
     })
   })
-
-})
+   */
 
