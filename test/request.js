@@ -1,4 +1,5 @@
 var request = require('../node_modules/request')
+  , join = require('path').join
   , should = require('should')
   , fs = require('fs')
   , express = require('express')
@@ -104,7 +105,7 @@ describe('request', function(){
     })
     it('should get as binary', function(done){
       var bin = 'http://macpro.local/~puraumu/src/CSS-frameworks.pdf'
-        , name = 'frameworks.pdf'
+        , name = join(__dirname, '../sd/', 'frameworks.pdf')
         , options = {}
       options.url = bin
       options.encoding = 'binary'
