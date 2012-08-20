@@ -90,5 +90,16 @@ describe('Bot-Log', function() {
     })
   })
 
+  describe('time', function() {
+    it('should count response time', function(done) {
+      act.fn = function(body, url) {
+        log.duration.should.be.a('number')
+        done()
+      }
+      client.set('url', host + '/')
+      client.trigger(act)
+    })
+  })
+
 })
 
