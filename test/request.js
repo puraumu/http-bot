@@ -117,6 +117,18 @@ describe('request', function(){
         })
       })
     })
+    it('should pipe to fs', function(done) {
+      var name = join(__dirname, '../sd/', 'pipe.txt')
+        , options = {url: 'http://macpro.local/~puraumu/src/CSS-frameworks.pdf'}
+        // , options = {url: url + '/'}
+      var req = request(options)
+      req.pipe(fs.createWriteStream(name))
+      req.on('response', function(res) {
+        res.on('end', function() {
+          done()
+        })
+      })
+    })
   })
 
 })

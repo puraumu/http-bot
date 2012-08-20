@@ -58,12 +58,12 @@ describe('Bot', function() {
       act.write = true
       client.trigger(act)
       setTimeout(function() {done()}, 10);
-      // done()
     })
     it('should write binary file', function(done){
+      act.fn = function() {}
       client.set('url', binary)
-      client.request(act)
-      done()
+      client.trigger(act)
+      setTimeout(function() {done()}, 10);
     })
   })
 
