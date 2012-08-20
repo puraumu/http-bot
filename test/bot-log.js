@@ -18,7 +18,7 @@ var act = {}
   , client
   , log = bot.log
 
-describe('Bot-Log', function() {
+describe('Bot.Log', function() {
 
   describe('req', function() {
     it('should have request header', function(done) {
