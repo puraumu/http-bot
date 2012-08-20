@@ -1,7 +1,6 @@
 var root = require('../lib')
   , action = root.action
   , join = require('path').join
-  , fs = require('fs')
   , should = require('should')
   , express = require('express')
   , app = express()
