@@ -44,33 +44,6 @@ describe('Bot.Log', function() {
     })
   })
 
-  describe('event', function() {
-    it('should listen request event', function(done) {
-      log.once('req', function() {
-        log.req.path.should.eql('/')
-        done()
-      })
-      client.actions.test = noop
-      client.set('url', host + '/')
-      client.trigger(false, 'test')
-    })
-    it('should listen response event', function(done) {
-      log.once('req', function() {
-        log.res.statusCode.should.eql(200)
-        done()
-      })
-      client.trigger(false, 'test')
-    })
-    it('should listen notfound event', function(done) {
-      log.once('notfound', function() {
-        log.req.exist.should.false
-        done()
-      })
-      client.set('url', 'http://localhost:9090/')
-      client.trigger(false, 'test')
-    })
-  })
-
   describe('`error`', function(){
     it('should treat it to be exist if request gets 404', function(done){
       client.actions.test = function() {
