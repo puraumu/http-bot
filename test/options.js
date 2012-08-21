@@ -12,7 +12,7 @@ describe('`options`', function() {
 
   describe('initialize', function() {
     it('should read arguments', function() {
-      options = new Options(url)
+      options = Options(url)
       options.url.should.eql(url)
     })
   })
