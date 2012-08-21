@@ -29,9 +29,13 @@ describe('Action.request', function() {
   })
 
   describe('set()', function() {
-    it('should assign arguments', function() {
+    it('should assign object to Action\'s options', function() {
+      action.set({baz: 'foo'})
+      action.options.should.have.property('baz', 'foo')
+    })
+    it('should assign arguments to Action\'s options', function() {
       action.set('foo', 'bar')
-      action.options['foo'].should.eql('bar')
+      action.options.should.have.property('foo', 'bar')
     })
   })
 
@@ -49,6 +53,21 @@ describe('Action.request', function() {
         done()
       }
       action.trigger(false, 'test')
+    })
+  })
+
+  describe('.do()', function() {
+    it('should set the action to `Action`', function() {
+      action.do('test', function(res, opt, next) {})
+      action.actions.should.have.property('test')
+    })
+    it('should set the action to `Action` by passing named function', function() {
+      function hoge() {}
+      action.do(hoge)
+      action.actions.should.have.property('hoge')
+    })
+    it('should return false and alert message when pass anonymous function', function() {
+      // action.do(function() {}).should.be.false
     })
   })
 
