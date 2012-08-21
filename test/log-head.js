@@ -1,76 +1,54 @@
-var root = require('../lib')
-  , bot = root.bot
+var root = require('../')
+  , Log = root.Log
+  , http = require('http')
   , should = require('should')
-  , express = require('express')
-  , app = express()
   , join = require('path').join
-  , host = 'http://localhost:3006'
 
-app.get('/', function(req, res){
-  res.send('foobar');
-});
+http.createServer(function(req, res) {
+  if (req.url == '/') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('foobar');
+  };
+}).listen(8989);
 
-app.listen(3006);
-
-var act = {}
-  , out = join(__dirname, '../sd')
-  , set = {dldir: out, actions: {}}
-  , client
-  , log = bot.log
+var log = Log()
+  , url = 'http://localhost'
+  , port = 8989
 
 describe('Bot.Log.head', function() {
 
+  before(function(done) {
+    var req = http.request({url: url, port: port})
+    log.keepHeader('req', req)
+    req.end()
+    req.on('response', function(res) {
+      log.keepHeader('res', res)
+      done()
+    })
+  })
+
   describe('defineGetter', function() {
-    it('should return response headers', function(done) {
-      client = bot(set)
-      client.actions.test = function(res, options) {
-        res.head.should.eql(log.res)
-        done()
-      }
-      client.set('url', host + '/')
-      client.trigger(false, 'test')
+    it('should return response headers', function() {
+      log.res.head.should.eql(log.res)
     })
-    it('should return response statusCode', function(done) {
-      client.actions.test = function(res, options) {
-        res.status.should.eql(200)
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should return response statusCode', function() {
+      log.res.status.should.eql(200)
     })
-    it('should return response content-type', function(done) {
-      client.actions.test = function(res, options) {
-        res.type.indexOf('text/html').should.eql(0)
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should return response content-type', function() {
+      log.res.type.indexOf('text/html').should.eql(0)
     })
-    it('should check if content-type is text/html', function(done) {
-      client.actions.test = function(res, options) {
-        res.html.should.be.true
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should check if content-type is text/html', function() {
+      log.res.html.should.be.true
     })
-    it('should return if server exist', function(done) {
-      client.actions.test = function(res, options) {
-        res.exist.should.be.true
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should return if server exist', function() {
+      log.res.exist.should.be.true
     })
-    it('should return response content-length', function(done) {
-      client.actions.test = function(res, options) {
-        res.length.should.be.a('number')
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should return response content-length', function() {
+      log.res.length.should.be.a('number')
     })
-    it('should return request path', function(done) {
-      client.actions.test = function(res, options) {
-        res.path.should.eql('/')
-        done()
-      }
-      client.trigger(false, 'test')
+    it('should return request path', function() {
+      // console.log(log.req);
+      // log.res.path.should.eql('/')
     })
   })
 
