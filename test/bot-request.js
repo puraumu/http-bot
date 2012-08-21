@@ -53,6 +53,19 @@ describe('Bot', function() {
     })
 
     /**
+     * prior log-events
+  it('should listen notfound event', function(done) {
+    http.get({url: url, port: 9090})
+    log.once('notfound', function() {
+      log.req.exist.should.false
+      done()
+    })
+    client.set('url', 'http://localhost:9090/')
+    client.trigger(false, 'test')
+  })
+     */
+
+    /**
      * prior bot.log
   describe('`error`', function(){
     it('should treat it to be exist if request gets 404', function(done){

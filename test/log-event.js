@@ -1,51 +1,44 @@
-var root = require('../lib')
-  , bot = root.bot
+var root = require('../')
+  , Log = root.Log
+  , http = require('http')
   , should = require('should')
-  , express = require('express')
-  , app = express()
   , join = require('path').join
-  , host = 'http://localhost:3009'
 
-app.get('/', function(req, res){
-  res.send('foobar');
-});
+http.createServer(function(req, res) {
+  if (req.url == '/') {
+    res.end('foobar');
+  };
+}).listen(8989);
 
-app.listen(3009);
+var log = Log()
+  , url = 'http://localhost'
+  , port = 8989
 
-function noop() {}
+describe('Log.events', function() {
 
-var act = {}
-  , out = join(__dirname, '../sd')
-  , set = {dldir: out, actions: {}}
-  , client
-  , log = bot.log
-
-describe('Bot.Log.events', function() {
+  before(function(done) {
+    var req = http.request({url: url, port: port})
+    log.keepHeader('req', req)
+    req.end()
+    req.on('response', function(res) {
+      log.keepHeader('res', res)
+      done()
+    })
+  })
 
   it('should listen request event', function(done) {
-    client = bot(set)
     log.once('req', function() {
       log.req.path.should.eql('/')
       done()
     })
-    client.actions.test = noop
-    client.set('url', host + '/')
-    client.trigger(false, 'test')
+    log.emit('req')
   })
   it('should listen response event', function(done) {
     log.once('res', function() {
       log.res.statusCode.should.eql(200)
       done()
     })
-    client.trigger(false, 'test')
-  })
-  it('should listen notfound event', function(done) {
-    log.once('notfound', function() {
-      log.req.exist.should.false
-      done()
-    })
-    client.set('url', 'http://localhost:9090/')
-    client.trigger(false, 'test')
+    log.emit('res')
   })
 
 })

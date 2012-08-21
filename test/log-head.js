@@ -15,7 +15,7 @@ var log = Log()
   , url = 'http://localhost'
   , port = 8989
 
-describe('Bot.Log.head', function() {
+describe('Log.head', function() {
 
   before(function(done) {
     var req = http.request({url: url, port: port})
