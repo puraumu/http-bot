@@ -16,11 +16,11 @@ app.get('/title', function(req, res){
 
 app.listen(3002);
 
-var options = {url: host + '/'}
-  , set = {dldir: join(__dirname, '../sd')}
-  , act = {
-    write: false,
-    fn: function() {} }
+function noop() {};
+
+var options = {}
+  , out = join(__dirname, '../sd')
+  , set = {dldir: out, actions: {}}
 
 describe('`action`', function() {
 
@@ -32,24 +32,39 @@ describe('`action`', function() {
     })
   })
 
-  describe('use()', function() {
+  describe('set()', function() {
     it('should assign object to Bot\'s options', function() {
-      action.use(options)
+      action.set({url: host + '/'})
       action.client.options.should.have.property('url', host + '/')
     })
     it('should assign arguments to Bot\'s options', function() {
-      action.use('foo', 'bar')
+      action.set('foo', 'bar')
       action.client.options.should.have.property('foo', 'bar')
     })
   })
 
-  describe('.next()', function() {
-    it('should invoke function by passing object to Bot', function() {
-      act.fn = function(body, url) {
-        body.should.eql('foobar')
+  describe('.do()', function() {
+    it('should set the action to `Bot`', function() {
+      action.do('test', function(res, opt, next) {})
+      action.client.actions.should.have.property('test')
+    })
+    it('should set the action to `Bot` by passing named function', function() {
+      function hoge() {}
+      action.do(hoge)
+      action.client.actions.should.have.property('hoge')
+    })
+    it('should return false when pass anonymous function', function() {
+      // action.do(function() {}).should.be.false
+    })
+  })
+
+  describe('.start()', function() {
+    it('should invoke function by passing object to Bot', function(done) {
+      action.do('test', function(res, opt, next) {
+        res.body.should.eql('foobar')
         done()
-      }
-      action.next(act)
+      })
+      action.start('test')
     })
   })
 
