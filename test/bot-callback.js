@@ -12,9 +12,10 @@ app.get('/', function(req, res){
 
 app.listen(3007);
 
-var act = {}
-  , out = join(__dirname, '../sd')
-  , set = {dldir: out}
+function noop() {}
+
+var out = join(__dirname, '../sd')
+  , set = {dldir: out, actions: {test: noop, end: noop}}
   , client
   , log = bot.log
 
@@ -22,13 +23,13 @@ describe('Bot.callback', function() {
 
   it('should return response headers and request options', function(done) {
     client = bot(set)
-    client.set('url', host + '/')
-    act.fn = function(res, options) {
+    client.actions.test = function(res, options) {
       res.should.have.property('statusCode')
       options.should.have.property('url')
       done()
     }
-    client.trigger(act)
+    client.set('url', host + '/')
+    client.trigger(false, 'test')
   })
 
   describe('response', function() {
@@ -36,12 +37,28 @@ describe('Bot.callback', function() {
 
   describe('options', function() {
     it('should have requested url ', function(done) {
-      client.set('url', host + '/hoge')
-      act.fn = function(res, options) {
+      client.actions.test = function(res, options) {
         options.url.should.eql(host + '/hoge')
         done()
       }
-      client.trigger(act)
+      client.set('url', host + '/hoge')
+      client.trigger(false, 'test')
+    })
+  })
+
+  describe('next', function() {
+    it('should iterate action', function(done) {
+      client.actions.end = function(res, options, next) {
+        options.url.should.eql(host + '/')
+        done()
+      }
+      client.actions.test = function(res, options, next) {
+        options.url.should.eql(host + '/hoge')
+        options.set('url', host + '/')
+        next('end')
+      }
+      client.set('url', host + '/hoge')
+      client.trigger(false, 'test')
     })
   })
 
