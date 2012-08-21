@@ -36,23 +36,22 @@ describe('Bot', function() {
     })
   })
 
-  describe('request()', function(){
+  describe('sendRequest()', function(){
     it('should get res.body', function(done){
       client.set('url', host + '/')
-      act.write = false
-      act.fn = function(body, url, cwp) {
-          body.should.eql('foobar');
-          done() }
-      client.request(act.write, act.fn)
+      client.sendRequest(false, function(res) {
+        res.body.should.eql('foobar');
+        done()
+      })
     })
     it('should invoke request', function(done){
-      client.set('url', host + '/')
-      act.write = false
-      act.fn = function(body, url, cwp) {
-          body.should.eql('foobar');
-          done() }
-      client.trigger(act)
+      client.actions.test = function(res) {
+        res.body.should.eql('foobar');
+        done()
+      }
+      client.trigger(false, 'test')
     })
+    /**
     it('should get body and write it', function(done){
       act.fn = function() {}
       act.write = true
@@ -65,6 +64,7 @@ describe('Bot', function() {
       client.trigger(act)
       setTimeout(function() {done()}, 10);
     })
+     */
   })
 
 })
