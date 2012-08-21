@@ -1,64 +1,67 @@
-var root = require('../lib')
-  , bot = root.bot
+var robot = require('../')
+  , Action = robot.Action
+  , http = require('http')
   , should = require('should')
-  , express = require('express')
-  , app = express()
   , join = require('path').join
-  , host = 'http://localhost:3007'
 
-app.get('/', function(req, res){
-  res.send('foobar');
-});
-
-app.listen(3007);
+http.createServer(function(req, res) {
+  if (req.url == '/') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('foobar');
+  };
+  if (req.url == '/hoge') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('hogehoge');
+  };
+}).listen(8989);
 
 function noop() {}
 
-var out = join(__dirname, '../sd')
+var host = 'http://localhost:8989'
+  , out = join(__dirname, '../sd')
   , set = {dldir: out, actions: {test: noop, end: noop}}
-  , client
-  , log = bot.log
+  , action
 
 describe('Action.callback', function() {
 
   it('should return response headers and request options', function(done) {
-    client = bot(set)
-    client.actions.test = function(res, options) {
+    action = new Action(set)
+    action.actions.test = function(res, options) {
       res.should.have.property('statusCode')
       options.should.have.property('url')
       done()
     }
-    client.set('url', host + '/')
-    client.trigger(false, 'test')
+    action.set('url', host + '/')
+    action.trigger(false, 'test')
   })
 
   describe('response', function() {
   })
 
   describe('options', function() {
-    it('should have requested url ', function(done) {
-      client.actions.test = function(res, options) {
+    it('should have requested url', function(done) {
+      action.actions.test = function(res, options) {
         options.url.should.eql(host + '/hoge')
         done()
       }
-      client.set('url', host + '/hoge')
-      client.trigger(false, 'test')
+      action.set('url', host + '/hoge')
+      action.trigger(false, 'test')
     })
   })
 
   describe('next', function() {
     it('should iterate action', function(done) {
-      client.actions.end = function(res, options, next) {
+      action.actions.end = function(res, options, next) {
         options.url.should.eql(host + '/')
         done()
       }
-      client.actions.test = function(res, options, next) {
+      action.actions.test = function(res, options, next) {
         options.url.should.eql(host + '/hoge')
         options.set('url', host + '/')
         next('end')
       }
-      client.set('url', host + '/hoge')
-      client.trigger(false, 'test')
+      action.set('url', host + '/hoge')
+      action.trigger(false, 'test')
     })
   })
 
