@@ -19,7 +19,7 @@ var out = join(__dirname, '../sd')
   , client
   , log = bot.log
 
-describe('Bot.callback', function() {
+describe('Action.callback', function() {
 
   it('should return response headers and request options', function(done) {
     client = bot(set)

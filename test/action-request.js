@@ -19,7 +19,7 @@ var out = join(__dirname, '../sd')
   , set = {dldir: out}
   // , log = bot.log
 
-describe('Bot', function() {
+describe('Action.request', function() {
 
   describe('new', function() {
     it('should read dldir', function() {
