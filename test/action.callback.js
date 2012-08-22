@@ -32,7 +32,7 @@ describe('Action.callback', function() {
       done()
     }
     action.set('url', host + '/')
-    action.trigger(false, 'test')
+    action.trigger('test')
   })
 
   describe('response', function() {
@@ -45,7 +45,7 @@ describe('Action.callback', function() {
         done()
       }
       action.set('url', host + '/hoge')
-      action.trigger(false, 'test')
+      action.trigger('test')
     })
   })
 
@@ -61,7 +61,7 @@ describe('Action.callback', function() {
         next('end')
       }
       action.set('url', host + '/hoge')
-      action.trigger(false, 'test')
+      action.trigger('test')
     })
   })
 

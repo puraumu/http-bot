@@ -52,7 +52,7 @@ describe('Action.request', function() {
         res.body.should.eql('foobar');
         done()
       }
-      action.trigger(false, 'test')
+      action.trigger('test')
     })
   })
 
