@@ -19,6 +19,7 @@ var robot
 
 describe('`Robot`', function() {
 
+  /**
   beforeEach(function() {
     robot = new Robot()
     robot.set('url', host + '/')
@@ -59,7 +60,6 @@ describe('`Robot`', function() {
       robot.start('test')
     })
   })
-  /**
    */
 
 })
