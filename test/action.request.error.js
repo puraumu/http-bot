@@ -21,6 +21,22 @@ var out = join(__dirname, '../sd')
 
 describe('Action.request.error', function() {
 
+  describe('error()', function() {
+    it('should assign function to action._error', function() {
+      var foo = function() {}
+      action.error(foo)
+      action._error.should.eql(foo)
+    })
+    it('should call the error function when server was not found', function(done) {
+      action.error(function(req) {
+        req.exist.should.be.false;
+        done()
+      })
+      action.set('url', 'http://localhost:9090/')
+      action.sendRequest();
+    })
+  })
+
   describe('`request`', function(){
     it('should treat it to be exist if request gets 404', function(done){
       action.set('url', host + '/hogehoge')
@@ -32,22 +48,23 @@ describe('Action.request.error', function() {
     })
     it('should not treat it to be exist if server was not found', function(done){
       action.set('url', 'http://localhost:9090/')
-      action.sendRequest(false, function() {
-        // should.strictEqual(res.body, null)
-        action.log.req.exist.should.be.false
+      action._error = function(req) {
+        req.exist.should.be.false
         done()
-      })
+      };
+      action.sendRequest()
     })
   })
 
   describe('`event`', function() {
     it('should listen notfound event', function(done) {
-      action.set('url', 'http://localhost:9090/')
-      action.sendRequest(false, function() {})
       action.log.once('notfound', function() {
         action.log.req.exist.should.false
         done()
       })
+      action.set('url', 'http://localhost:9090/')
+      action._error = function() {  };
+      action.sendRequest()
     })
   })
 
