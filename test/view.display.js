@@ -11,15 +11,16 @@ http.createServer(function(req, res) {
 }).listen(8989);
 
 var view = robot.view
-  , url = 'http://localhost'
+  , host = 'http://localhost'
   , port = 8989
+  , url = host + ':' + port
   , request
   , response
 
 describe('view', function(){
 
   before(function(done) {
-    var req = http.request({url: url, port: port})
+    var req = http.request({url: host, port: port})
     req.end()
     request = req
     req.on('response', function(res) {
@@ -30,13 +31,13 @@ describe('view', function(){
 
   describe('displayRequest()', function() {
     it('should display request header', function() {
-      view.displayRequest(request)
+      view.displayRequest(request, url)
     })
   })
 
   describe('displayResponse()', function() {
     it('should display response header', function() {
-      view.displayResponse(response)
+      view.displayResponse(response, url)
     })
   })
 
