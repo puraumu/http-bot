@@ -7,17 +7,14 @@ var robot = require('../')
 http.createServer(function(req, res) {
   if (req.url == '/') {
     res.writeHead(200, {'Content-Type': 'text/html'})
-    return res.end('foobar');
+    res.end('foobar');
   };
   res.writeHead(404, {'Content-Type': 'text/html'})
   res.end('Not Found');
-}).listen(8989);
+}).listen(9989);
 
 var action = new Action()
-  , host = 'http://localhost:8989'
-
-var out = join(__dirname, '../sd')
-  , set = {dldir: out}
+  , host = 'http://localhost:9989'
 
 describe('Action.request.error', function() {
 
