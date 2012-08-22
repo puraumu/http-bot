@@ -12,7 +12,7 @@ http.createServer(function(req, res) {
 
 function noop() {}
 
-var log = Log()
+var log = new Log()
   , url = 'http://localhost'
   , port = 8989
 

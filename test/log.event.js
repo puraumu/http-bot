@@ -10,7 +10,7 @@ http.createServer(function(req, res) {
   };
 }).listen(8989);
 
-var log = Log()
+var log = new Log()
   , url = 'http://localhost'
   , port = 8989
 
