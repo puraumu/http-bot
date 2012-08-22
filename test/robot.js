@@ -26,7 +26,7 @@ describe('`Robot`', function() {
   describe('basic function', function() {
     it('should get response', function(done) {
       robot.do('test', function(res, opt, next) {
-        // console.log(res.body);
+        res.body.should.eql('foobar')
         done();
       })
       robot.set('url', host + '/')
