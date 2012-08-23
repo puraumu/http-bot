@@ -62,9 +62,9 @@ describe('Multiple request', function() {
         next()
         counter(res, done);
       });
-      var url = host + '/user/';
+      var part = host + '/user/';
       for (var i = 0; i < len; i++) {
-        action.set('url', url + String(i))
+        action.set('url', part + String(i))
         action.trigger('test');
       };
     })

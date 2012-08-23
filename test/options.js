@@ -2,18 +2,26 @@ var root = require('../')
   , Options = root.Options
   , join = require('path').join
   , fs = require('fs')
+  , parse = require('url').parse
   , should = require('should')
 
-var options
-  , url = 'http://localhost'
+var options = new Options()
+  , host = 'http://localhost:3434'
   , cookie = {foo: 'bar', 'hoge': 45}
 
 describe('`options`', function() {
 
-  describe('initialize', function() {
-    it('should read arguments', function() {
-      options = new Options(url)
-      options.url.should.eql(url)
+  describe('set()', function() {
+    it('should assign setting to val', function() {
+      options.set('foo', 'bar')
+      options.should.have.property('foo', 'bar')
+    })
+    it('should convert to object and have its property if setting is url', function() {
+      var url = parse(host + '/foo')
+      options.set('url', host + '/foo')
+      for (var key in url) {
+        options[key].should.eql(url[key])
+      };
     })
   })
 
@@ -23,27 +31,12 @@ describe('`options`', function() {
     })
   })
 
-  describe('addCookie()', function() {
-    it('should add cookie string', function() {
-      options.addCookie('hoge=baz')
-      options.jar.cookies.should.have.length(1)
-    })
-    it('should add cookie string', function() {
-      options.addCookie('ff=hh')
-      options.jar.cookies.should.have.length(2)
-    })
-    it('should add Array', function() {
-      options.addCookie(['e=bar', 'foo=bar'])
-      options.jar.cookies.should.have.length(4)
-    })
-  })
-
   describe('isbinary()', function() {
     it('should return false if request to get html', function() {
       options.isbinary().should.be.false
     })
     it('should return true if request to binary object', function() {
-      options.url = 'http://localhost/foo.gif'
+      options.set('url', 'http://localhost/foo.gif')
       options.isbinary().should.be.true
     })
   })
