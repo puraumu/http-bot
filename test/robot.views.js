@@ -1,4 +1,4 @@
-var Robot = require('../')
+var robot = require('../')
   , http = require('http')
   , join = require('path').join
   , should = require('should')
@@ -15,25 +15,25 @@ http.createServer(function(req, res) {
 
 function noop() {};
 
-var robot
-
-describe('`Robot`', function() {
+describe('`Robot.view`', function() {
 
   /**
-  beforeEach(function() {
-    robot = new Robot()
-    robot.set('url', host + '/')
-    robot.disable('silent')
-    robot.disable('warning')
-    robot.disable('request')
-    robot.disable('response')
-    robot.disable('debug')
+  before(function() {
     robot.do('test', function(res, opt, next) {
       opt.done();
     })
     robot.error(function(res, opt, next) {
       opt.done();
     })
+  })
+
+  beforeEach(function() {
+    robot.set('url', host + '/')
+    robot.disable('silent')
+    robot.disable('warning')
+    robot.disable('request')
+    robot.disable('response')
+    robot.disable('debug')
     console.log('test begins');
   })
 
@@ -47,16 +47,19 @@ describe('`Robot`', function() {
       robot.set('done', done)
       robot.set('url', 'http://localhost:7779/')
       robot.enable('warning')
+      robot.reset().display()
       robot.start('test')
     })
     it('should show request results', function(done) {
       robot.set('done', done)
       robot.enable('request')
+      robot.reset().display()
       robot.start('test')
     })
     it('should show response results', function(done) {
       robot.set('done', done)
       robot.enable('response')
+      robot.reset().display()
       robot.start('test')
     })
   })

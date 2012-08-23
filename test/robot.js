@@ -1,4 +1,4 @@
-var Robot = require('../')
+var robot = require('../')
   , http = require('http')
   , join = require('path').join
   , should = require('should')
@@ -19,7 +19,7 @@ http.createServer(function(req, res) {
 
 function noop() {};
 
-var robot = new Robot()
+// var robot = new Robot()
 
 describe('`Robot`', function() {
 
