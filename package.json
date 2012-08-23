@@ -1,20 +1,21 @@
 {
     "name": "http-bot"
-  , "version": "0.0.1"
-  , "description": "http bot based on user action"
-  , "keywords": ["http", "request", "bot"]
+  , "version": "0.0.2"
+  , "description": "A chaining requests library for node"
+  , "keywords": ["http", "chaining", "request", "bot"]
   , "author": "puraumu"
+  , "repository": {
+      "type": "git"
+    , "url": "git://github.com/puraumu/http-bot.git"
+  }
   , "dependencies": {
-      "jsdom": "0.2.x"
-    , "request": "2.x.x"
-    , "mkdirp": "0.3.x"
-    , "page-history": "0.0.1"
+      "mkdirp": "0.3.x"
   }
   , "devDependencies": {
-      "express": "3.0.0beta4"
+      "express": "3.0.0rc2"
+    , "request": "2.x.x"
     , "should": "*"
     , "mocha": "*"
-    , "page-history": "0.0.1"
   }
   , "main": "./index"
   , "engines": { "node": "*" }
