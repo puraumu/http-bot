@@ -1,5 +1,6 @@
 var robot = require('../')
   , http = require('http')
+  , request = require('../node_modules/request')
   , should = require('should')
   , join = require('path').join
 
@@ -14,32 +15,79 @@ var view = new robot.View()
   , host = 'http://localhost'
   , port = 8989
   , url = host + ':' + port
-  , request
-  , response
+  , clientRequest
+  , clientResponse
+  , requestRequest
+  , requestResponse
 
 describe('View', function(){
 
   before(function(done) {
     var req = http.request({url: host, port: port})
     req.end()
-    request = req
+    clientRequest = req
+    clientRequest.exist = true
     req.on('response', function(res) {
-      response = res
+      clientResponse = res
       done()
     })
   })
 
-  describe('displayRequest()', function() {
-    it('should display request header', function() {
-      // view.displayRequest(request, url)
+  before(function(done) {
+    request({url: url}, function(err, res) {
+      requestRequest = this
+      requestRequest.exist = true
+      requestResponse = res
+      done()
     })
   })
 
-  describe('displayResponse()', function() {
-    it('should display response header', function() {
-      // view.displayResponse(response, url)
+  describe('http.request', function() {
+    describe('displayRequest()', function() {
+      it('should display request header', function() {
+        // view.displayRequest(clientRequest, url)
+      })
+    })
+    describe('displayResponse()', function() {
+      it('should display response header', function() {
+        // view.displayResponse(clientResponse, url, 4)
+      })
+    })
+    describe('showVerboseRequest()', function() {
+      it('should display verbose response header', function() {
+        // view.showVerboseRequest(clientRequest)
+      })
+    })
+    describe('showVerboseResponse()', function() {
+      it('should display verbose response header', function() {
+        // view.showVerboseResponse(clientResponse)
+      })
     })
   })
+
+  describe('`request`', function() {
+    describe('displayRequest()', function() {
+      it('should display request header', function() {
+        // view.displayRequest(requestRequest, url)
+      })
+    })
+    describe('displayResponse()', function() {
+      it('should display response header', function() {
+        // view.displayResponse(requestResponse, url, 4)
+      })
+    })
+    describe('showVerboseRequest()', function() {
+      it('should display verbose response header', function() {
+        // view.showVerboseRequest(requestRequest)
+      })
+    })
+    describe('showVerboseResponse()', function() {
+      it('should display verbose response header', function() {
+        // view.showVerboseResponse(requestResponse)
+      })
+    })
+  })
+
 
 })
 
