@@ -11,22 +11,10 @@ http.createServer(function(req, res) {
   };
 }).listen(8989);
 
-var action
+var action = new Action()
   , host = 'http://localhost:8989'
-  , binary = 'http://localhost/~puraumu/src/CSS-frameworks.pdf'
-
-var out = join(__dirname, '../sd')
-  , set = {dldir: out}
-  // , log = bot.log
 
 describe('Action.request', function() {
-
-  describe('new', function() {
-    it('should read dldir', function() {
-      action = new Action(set)
-      action.dldir.should.eql(out)
-    })
-  })
 
   describe('set()', function() {
     it('should assign object to Action\'s options', function() {
@@ -42,7 +30,7 @@ describe('Action.request', function() {
   describe('sendRequest()', function(){
     it('should get res.body', function(done){
       action.set('url', host + '/')
-      action.sendRequest(false, function(res) {
+      action.sendRequest(function(res) {
         res.body.should.eql('foobar');
         done()
       })
@@ -73,27 +61,12 @@ describe('Action.request', function() {
 
   describe('time', function() {
     it('should count response time', function(done) {
-      action.sendRequest(false, function() {
+      action.sendRequest(function() {
         action.log.duration.should.be.a('number')
         done()
       })
     })
   })
-
-  /**
-  it('should get body and write it', function(done){
-    act.fn = function() {}
-    act.write = true
-    client.trigger(act)
-    setTimeout(function() {done()}, 10);
-  })
-  it('should write binary file', function(done){
-    act.fn = function() {}
-    client.set('url', binary)
-    client.trigger(act)
-    setTimeout(function() {done()}, 10);
-  })
-   */
 
 })
 

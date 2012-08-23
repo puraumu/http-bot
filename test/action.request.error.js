@@ -37,7 +37,7 @@ describe('Action.request.error', function() {
   describe('`request`', function(){
     it('should treat it to be exist if request gets 404', function(done){
       action.set('url', host + '/hogehoge')
-      action.sendRequest(false, function() {
+      action.sendRequest(function() {
         action.log.res.statusCode.should.eql(404)
         action.log.req.exist.should.be.true
         done()
