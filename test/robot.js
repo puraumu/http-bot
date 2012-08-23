@@ -19,12 +19,11 @@ http.createServer(function(req, res) {
 
 function noop() {};
 
-// var robot = new Robot()
-
 describe('`Robot`', function() {
 
   describe('basic function', function() {
     it('should get response', function(done) {
+      robot.enable('silent')
       robot.do('test', function(res, opt, next) {
         res.body.should.eql('foobar')
         done();
@@ -33,6 +32,7 @@ describe('`Robot`', function() {
       robot.start('test')
     })
     it('should return request header if server was not found', function(done) {
+      robot.enable('silent')
       robot.do('test', function() {})
       robot.error(function(req, opt, next) {
         req.path.should.eql('/')

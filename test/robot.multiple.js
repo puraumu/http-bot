@@ -27,9 +27,9 @@ describe('Robot.Multiple', function() {
 
   describe('trigger loop', function() {
     it('should return the same id of log.url and res.body', function(done) {
-
+      robot.enable('silent')
       robot.do('test', function(res, opt, next) {
-        console.log(res.url, res.body);
+        // console.log(res.url, res.body);
         next()
         counter(done);
       });
