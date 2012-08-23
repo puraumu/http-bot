@@ -28,7 +28,7 @@ describe('Action.callback', function() {
     action = new Action(set)
     action.actions.test = function(res, options) {
       res.should.have.property('statusCode')
-      options.should.have.property('url')
+      options.should.have.property('href')
       done()
     }
     action.set('url', host + '/')
@@ -41,7 +41,7 @@ describe('Action.callback', function() {
   describe('options', function() {
     it('should have requested url', function(done) {
       action.actions.test = function(res, options) {
-        options.url.should.eql(host + '/hoge')
+        options.href.should.eql(host + '/hoge')
         done()
       }
       action.set('url', host + '/hoge')
@@ -52,11 +52,11 @@ describe('Action.callback', function() {
   describe('next', function() {
     it('should iterate action', function(done) {
       action.actions.end = function(res, options, next) {
-        options.url.should.eql(host + '/')
+        options.href.should.eql(host + '/')
         done()
       }
       action.actions.test = function(res, options, next) {
-        options.url.should.eql(host + '/hoge')
+        options.href.should.eql(host + '/hoge')
         options.set('url', host + '/')
         next('end')
       }
