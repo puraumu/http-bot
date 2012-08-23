@@ -1,10 +1,6 @@
-/**
- * Module dependencies.
- */
-
 var express = require('express');
 
-var app = express.createServer();
+var app = express();
 
 app.set('json spaces', 0);
 
@@ -16,6 +12,10 @@ app.get('/', function(req, res){
 
 app.get('/redirect', function(req, res){
   res.redirect('/test/');
+});
+
+app.get('/user/:id', function(req, res) {
+  res.send('user: ' + req.params.id)
 });
 
 app.get('/error', function(req, res){
@@ -60,7 +60,7 @@ app.get('/foo', function(req, res){
     .send('foo=bar');
 });
 
-app.use(express.static(__dirname + '/../'));
+app.use(express.static(__dirname + '/../files'));
 
 app.listen(3000);
 console.log('Test server listening on port 3000');

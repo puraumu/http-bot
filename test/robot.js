@@ -1,33 +1,45 @@
-var root = require('../')
+var robot = require('../')
+  , http = require('http')
   , join = require('path').join
   , should = require('should')
-  , express = require('express')
-  , app = express()
-  , host = 'http://localhost:3002';
+  , host = 'http://localhost:8989';
 
-app.get('/', function(req, res){
-  res.send('foobar');
-});
-
-app.get('/title', function(req, res){
-  res.send('<title>here is title</title>');
-});
-
-app.listen(3010);
+http.createServer(function(req, res) {
+  if (req.url == '/') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('foobar');
+  };
+  if (req.url == '/title') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('<html><head><title>here is title</title></head></html>');
+  };
+  res.writeHead(404, {'Content-Type': 'text/html'})
+  res.end('<h1>Not Found.</h1>');
+}).listen(8989);
 
 function noop() {};
 
-var options = {}
-  , out = join(__dirname, '../sd')
-  , set = {dldir: out, actions: {}}
-  , robot
+// var robot = new Robot()
 
-describe('`robot`', function() {
+describe('`Robot`', function() {
 
-  describe('describe', function() {
-    it('should', function() {
-      robot = root;
-      console.dir(robot);
+  describe('basic function', function() {
+    it('should get response', function(done) {
+      robot.do('test', function(res, opt, next) {
+        res.body.should.eql('foobar')
+        done();
+      })
+      robot.set('url', host + '/')
+      robot.start('test')
+    })
+    it('should return request header if server was not found', function(done) {
+      robot.do('test', function() {})
+      robot.error(function(req, opt, next) {
+        req.path.should.eql('/')
+        done()
+      })
+      robot.set('url', 'http://localhost:9090/')
+      robot.start('test')
     })
   })
 

@@ -1,5 +1,4 @@
-var Getter = require('../')
-  , utils = Getter.utils
+var utils = require('../lib/utils')
   , should = require('should')
 
 describe('utils', function(){

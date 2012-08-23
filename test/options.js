@@ -1,5 +1,5 @@
-var root = require('../lib')
-  , options = root.options
+var root = require('../')
+  , Options = root.Options
   , join = require('path').join
   , fs = require('fs')
   , should = require('should')
@@ -12,7 +12,7 @@ describe('`options`', function() {
 
   describe('initialize', function() {
     it('should read arguments', function() {
-      options = options(url)
+      options = new Options(url)
       options.url.should.eql(url)
     })
   })
